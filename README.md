@@ -11,7 +11,7 @@ This project is a [Trello ](https://trello.com/) inspired list-making app and is
 - Unit test Jest (TBD)
 
 ## How to run locally
-In the project directory, you can run: `npm start` or `yarn start`
+In the project directory, after installing all packages, you can run: `npm start` or `yarn start`
 
 Runs the app in the development mode.<br />
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
