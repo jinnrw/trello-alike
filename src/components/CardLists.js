@@ -24,7 +24,10 @@ const CardLists = (props) => {
                     <div className="list-header">
                         <div className="list-header-title">{list_title}</div>
                     </div>
-                    <CardItems cardItems={cardItems} />
+                    <CardItems
+                        cardItems={cardItems}
+                        setCardItems={setCardItems}
+                    />
                     {
                         isComposing ?
                             <CardComposer
