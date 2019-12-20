@@ -1,12 +1,23 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import styled from "styled-components";
 
 // The styled method works perfectly on all of your own or any third-party component, as long as they attach the passed className prop to a DOM element.
-const BoardHeaderDiv = ({className}) => {
+const BoardHeaderDiv = ({ className }) => {
+    const [res, setRes] = useState({});
+
+    // componentDidmount, use [] as second argument
+    useEffect(() => {
+        fetch('/api')
+            .then(res => res.json())
+            .then(data => {
+                setRes(data);
+            })
+    }, [])
+
     return (
         <div className={className}>
             <div>
-                <span className="board-title">My Public Board</span>
+                <span className="board-title">{res.title}</span>
             </div>
         </div>
     )
