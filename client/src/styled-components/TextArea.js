@@ -10,11 +10,11 @@ const TextArea = styled.textarea`
     overflow: hidden;
     overflow-wrap: break-word;
     resize: none;
-    height: 90px;
     padding: 6px 8px;
     margin: 0 0 4px;
     width: 100%;
     border: none;
+    height: ${props => props.small ? "32px" : "90px"};
 `
 
 export default TextArea;

@@ -4,32 +4,34 @@ import TextArea from "../styled-components/TextArea"
 import { Button } from "../styled-components/Buttons"
 
 const CardItems = (props) => {
-    // init states
+    const cardItems = props.cardItems;
+    const setCardItems = props.setCardItems;
     const [isEditingCard, setIsEditingCard] = useState(false);
     const [currentEditingIndex, setCurrentEditingIndex] = useState(null);
-    const [newCardItems, setNewCardItems] = useState([...props.cardItems]);
+
+    let textareaRef = useRef();
 
     useEffect(() => {
         if (isEditingCard && !(currentEditingIndex === null)) {
-            quickEditorTextarea.current.focus();
-            quickEditorTextarea.current.value = props.cardItems[currentEditingIndex].title;
+            textareaRef.current.focus();
+            textareaRef.current.value = cardItems[currentEditingIndex].title;
         }
     }, [currentEditingIndex])
 
-    let quickEditorTextarea = useRef();
-
     function editCardTitle(index) {
         if (!isEditingCard) {
+            console.log(cardItems);
+            
             setIsEditingCard(true);
             setCurrentEditingIndex(index);
         }
     }
 
     function updateCardItem(e) {
-        quickEditorTextarea.current.value = e.target.value;
+        textareaRef.current.value = e.target.value;
     }
 
-    function onkeydownTextArea(e, index) {
+    function onkeydownTextArea(e) {
         if (e.keyCode === 13) {
             saveEditor();
             e.preventDefault();
@@ -37,19 +39,21 @@ const CardItems = (props) => {
             cancelEditor();
             e.preventDefault();
         }
-
     }
 
     function saveEditor() {
-        newCardItems[currentEditingIndex].title = quickEditorTextarea.current.value
-        setNewCardItems(newCardItems);
-        setIsEditingCard(false);
-        setCurrentEditingIndex(null);
+        cardItems[currentEditingIndex].title = textareaRef.current.value;
+        setCardItems(cardItems);
+        reset();
     }
 
     function cancelEditor() {
         // return previous state
-        setNewCardItems(prev => prev);
+        setCardItems(prev => prev);
+        reset();
+    }
+
+    function reset() {
         setIsEditingCard(false);
         setCurrentEditingIndex(null);
     }
@@ -69,31 +73,30 @@ const CardItems = (props) => {
     const quickEditor = (index) =>
         (<div className="quick-card-editor" key={index}>
             <TextArea
-                ref={quickEditorTextarea}
+                ref={textareaRef}
                 onChange={(e) => {
                     updateCardItem(e);
                 }}
                 onKeyDown={(e) => {
-                    onkeydownTextArea(e)
+                    onkeydownTextArea(e);
                 }} />
             <Button onClick={() => { saveEditor() }}>Save</Button>
         </div>)
 
-
-    // Return all card items
-    const cardItems = props.cardItems.map((item, index) =>
-        (isEditingCard ?
-            (index === currentEditingIndex ?
-                quickEditor(index) :
-                singleCardItem(item, index)
-            )
-            : singleCardItem(item, index)
-        )
-    )
-
     return (
         <StyledCardItems>
-            {cardItems}
+            {/* Return all card items*/}
+            {
+                cardItems.map((item, index) =>
+                    (isEditingCard ?
+                        (index === currentEditingIndex ?
+                            quickEditor(index) :
+                            singleCardItem(item, index)
+                        )
+                        : singleCardItem(item, index)
+                    )
+                )
+            }
         </StyledCardItems>
     )
 }

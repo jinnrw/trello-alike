@@ -58,5 +58,10 @@ app.get('/api/lists', (req, res) => {
   res.json(lists);
 })
 
+// 404 Page
+app.use(function (req, res, next) {
+  res.status(404).send("Sorry can't find that!")
+})
+
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))

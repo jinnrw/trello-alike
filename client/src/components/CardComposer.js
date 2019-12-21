@@ -1,9 +1,18 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from "styled-components";
 import { Button, ButtonClose } from "../styled-components/Buttons"
 
 const CardComposer = (props) => {
+    const cardItems = props.cardItems;
+    const setCardItems = props.setCardItems;
+    let isComposing = props.isComposing;
     let textareaRef = useRef();
+
+    useEffect(() => {
+        if (isComposing) {
+            textareaRef.current.focus();
+        }
+    }, [isComposing])
 
     function closeComposer() {
         props.setIsComposing(false);
@@ -15,9 +24,8 @@ const CardComposer = (props) => {
                 title: textareaRef.current.value,
                 completed: false
             };
-            let newcardItems = [...props.cardItems, newCard];
 
-            props.setCardItems(newcardItems);
+            setCardItems([...cardItems, newCard]);
             closeComposer();    
         }
     }
@@ -25,6 +33,9 @@ const CardComposer = (props) => {
     function onkeydownTextArea(e) {
         if (e.keyCode === 13) {
             addNewCard();
+            e.preventDefault();
+        } else if (e.keyCode === 27) { // Escape key
+            closeComposer();
             e.preventDefault();
         }
     }
@@ -41,7 +52,6 @@ const CardComposer = (props) => {
                 <Button onClick={addNewCard}>Add Card</Button>
                 <ButtonClose onClick={closeComposer}>&#10006;</ButtonClose>
             </div>
-
         </StyledCardComposer>
     )
 }

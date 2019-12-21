@@ -3,13 +3,12 @@ import styled from "styled-components";
 import CardItems from './CardItems';
 import CardComposer from './CardComposer';
 
-const CardLists = (props) => {
+const CardList = (props) => {
     let list_title = props.list_title;
     let list_items = props.list_items;
 
-    const cardsData = list_items;
     const [isComposing, setIsComposing] = useState(false);
-    const [cardItems, setCardItems] = useState(cardsData);
+    const [cardItems, setCardItems] = useState(list_items);
 
     function openCardComposer() {
         if (!isComposing) {
@@ -108,4 +107,4 @@ const StyledCardLists = styled.div`
 
 `
 
-export default CardLists;
+export default CardList;
