@@ -1,9 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import styled from "styled-components";
-import CardItems from './CardItems';
+import CardItem from './CardItem';
 import CardComposer from './CardComposer';
 
 const CardList = (props) => {
+    let list_id = props.list_id;
     let list_title = props.list_title;
     let list_items = props.list_items;
 
@@ -23,10 +24,17 @@ const CardList = (props) => {
                     <div className="list-header">
                         <div className="list-header-title">{list_title}</div>
                     </div>
-                    <CardItems
-                        cardItems={cardItems}
-                        setCardItems={setCardItems}
-                    />
+                    {
+                        cardItems.map((item, index) => (
+                            <CardItem
+                                cardItems={cardItems}
+                                setCardItems={setCardItems}
+                                list_id={list_id}
+                                item={item}
+                                index={index}
+                                key={index} />
+                        ))
+                    }
                     {
                         isComposing ?
                             <CardComposer

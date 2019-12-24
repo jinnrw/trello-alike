@@ -3,6 +3,7 @@ import styled from "styled-components";
 import CardList from './CardList';
 import AddList from './AddList';
 
+
 const BoardCanvas = () => {
     const [lists, setLists] = useState([]);
 
@@ -18,6 +19,7 @@ const BoardCanvas = () => {
     // Render multiple lists
     let renderLists = lists.map((list, index) => (
         <CardList
+            list_id={list.list_id}
             list_title={list.list_title}
             list_items={list.list_items}
             key={index} />

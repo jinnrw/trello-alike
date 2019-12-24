@@ -3,9 +3,14 @@ import styled from "styled-components";
 import TextArea from "../styled-components/TextArea"
 import { Button } from "../styled-components/Buttons"
 
-const CardItems = (props) => {
+import { DragDropContext } from 'react-beautiful-dnd';
+import { Droppable } from 'react-beautiful-dnd';
+import { Draggable } from 'react-beautiful-dnd';
+
+const CardItem = (props) => {
     const cardItems = props.cardItems;
     const setCardItems = props.setCardItems;
+    const list_id = props.list_id;
     const [isEditingCard, setIsEditingCard] = useState(false);
     const [currentEditingIndex, setCurrentEditingIndex] = useState(null);
 
@@ -21,7 +26,7 @@ const CardItems = (props) => {
     function editCardTitle(index) {
         if (!isEditingCard) {
             console.log(cardItems);
-            
+
             setIsEditingCard(true);
             setCurrentEditingIndex(index);
         }
@@ -58,45 +63,38 @@ const CardItems = (props) => {
         setCurrentEditingIndex(null);
     }
 
-    const singleCardItem = (item, index) =>
-        (<div className="list-card" key={index} >
-            <div className="list-card-detail">
-                <div>{item.title}</div>
-                <div className="edit-card"
-                    onClick={() => {
-                        editCardTitle(index);
-                    }}>
-                </div>
-            </div>
-        </div >)
+    // Drag n Draop
+    function onDragEnd() {
+        console.log('drag end');
 
-    const quickEditor = (index) =>
-        (<div className="quick-card-editor" key={index}>
-            <TextArea
-                ref={textareaRef}
-                onChange={(e) => {
-                    updateCardItem(e);
-                }}
-                onKeyDown={(e) => {
-                    onkeydownTextArea(e);
-                }} />
-            <Button onClick={() => { saveEditor() }}>Save</Button>
-        </div>)
+    }
+
+    const singleCardItem = (item, index) =>
+        (<Draggable draggableId={`${item.id}`} index={index}>
+            {
+                (provided) => (
+                    <StyledSingleCard
+                        className="list-card"
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        ref={provided.innerRef}
+                    >
+                        <div className="list-card-detail">
+                            <div>{item.title}</div>
+                            <div className="edit-card"
+                                onClick={() => {
+                                    editCardTitle(index);
+                                }}>
+                            </div>
+                        </div>
+                    </StyledSingleCard>
+                )
+            }
+        </Draggable>)
 
     return (
         <StyledCardItems>
-            {/* Return all card items*/}
-            {
-                cardItems.map((item, index) =>
-                    (isEditingCard ?
-                        (index === currentEditingIndex ?
-                            quickEditor(index) :
-                            singleCardItem(item, index)
-                        )
-                        : singleCardItem(item, index)
-                    )
-                )
-            }
+            {singleCardItem}
         </StyledCardItems>
     )
 }
@@ -177,4 +175,7 @@ const StyledCardItems = styled.div`
 
 `
 
-export default CardItems;
+const StyledSingleCard = styled.div`
+`
+
+export default CardItem;
