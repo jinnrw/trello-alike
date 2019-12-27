@@ -3,10 +3,39 @@ const path = require('path');
 
 // Load data
 const data = require('./Data.js');
+// const Board = require('./models/Board')
 
-let Board = {
-  boardTitle: "My Trello App"
-};
+// To do: bring this session into models directory
+let Board;
+const redis = require('redis');
+const redisClient = redis.createClient();
+redisClient.get('board_title', function (err, board_title) {
+  if (err !== null) {
+    console.log("Error: " + err);
+    return;
+  }
+
+  Board = {
+    boardTitle: board_title
+  }
+})
+
+// POST function: Return a Promise
+function postBoardTitle(req) {
+  return new Promise((resolve, reject) => {
+    redisClient.set('board_title', req, function (err) {
+      if (err !== null) {
+        reject("Error: " + err);
+      }
+
+      Board = {
+        boardTitle: req
+      }
+      // if resolve, return Board
+      resolve(Board); 
+    })
+  })
+}
 
 // Init App
 const app = express();
@@ -31,10 +60,9 @@ app.get('/api/lists', (req, res) => {
 
 // POST method
 // Change app title
-app.post('/api', (req, res) => {
-  console.log(req.body);
-  Board.boardTitle = req.body.boardTitle;
-  res.json(Board)
+app.post('/api', async (req, res) => {
+  const getBoard = await postBoardTitle(req.body.boardTitle);
+  res.json(getBoard);
 })
 
 // 404 Page

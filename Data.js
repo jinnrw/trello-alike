@@ -1,7 +1,3 @@
-// module.exports.Board = {
-//   boardTitle: "My Trello App"
-// };
-
 module.exports.Lists = [{
     list_title: "To Do",
     list_items: [
