@@ -3,9 +3,11 @@ import styled from "styled-components";
 import { Button, ButtonClose } from "../styled-components/Buttons"
 
 const CardComposer = (props) => {
-    const cardItems = props.cardItems;
-    const setCardItems = props.setCardItems;
-    let isComposing = props.isComposing;
+    const listId = props.listId;
+    const listCards = props.listCards;
+    const setListCards = props.setListCards;
+    const isComposing = props.isComposing;
+    
     let textareaRef = useRef();
 
     useEffect(() => {
@@ -14,19 +16,37 @@ const CardComposer = (props) => {
         }
     }, [isComposing])
 
+    // POST Method
+    function postAddCard(listId, card) {
+        fetch('/api/addCard', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                listId: listId,
+                card: card
+            })
+        }).then((res) => res.json())
+            .then((data) => {
+                setListCards(data);
+            })
+            .catch((err) => console.log(err))
+    }
+
     function closeComposer() {
         props.setIsComposing(false);
     }
 
     function addNewCard() {
-        if (!(textareaRef.current.value === ""))  {
+        if (!(textareaRef.current.value === "")) {
             let newCard = {
+                id: listCards[listCards.length - 1].id + 1,
                 title: textareaRef.current.value,
                 completed: false
             };
-
-            setCardItems([...cardItems, newCard]);
-            closeComposer();    
+            postAddCard(listId, newCard);
+            closeComposer();
         }
     }
 
@@ -43,10 +63,10 @@ const CardComposer = (props) => {
     return (
         <StyledCardComposer>
             <div className="list-card">
-                <textarea 
-                ref={textareaRef} 
-                placeholder="Enter a title for this card…"
-                onKeyDown={(e) => {onkeydownTextArea(e)}}></textarea>
+                <textarea
+                    ref={textareaRef}
+                    placeholder="Enter a title for this card…"
+                    onKeyDown={(e) => { onkeydownTextArea(e) }}></textarea>
             </div>
             <div className="composer-controls">
                 <Button onClick={addNewCard}>Add Card</Button>

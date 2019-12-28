@@ -1,17 +1,16 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from "styled-components";
-import CardItem from './CardItem';
+import Card from './Card';
 import CardComposer from './CardComposer';
 
 import { Droppable } from 'react-beautiful-dnd';
 
-const CardList = (props) => {
-    let list_id = props.list_id;
-    let list_title = props.list_title;
-    let list_items = props.list_items;
+const List = (props) => {
+    const listId = props.listId;
+    const listTitle = props.listTitle;
 
     const [isComposing, setIsComposing] = useState(false);
-    const [cardItems, setCardItems] = useState(list_items);
+    const [listCards, setListCards] = useState(props.listCards);
 
     function openCardComposer() {
         if (!isComposing) {
@@ -20,28 +19,32 @@ const CardList = (props) => {
     }
 
     // Render multiple cards
-    let renderCardItems = cardItems.map((item, index) => (
-        <CardItem
-            item={item}
+    const renderListCards = listCards.map((content, index) => (
+        <Card
+            listId={listId}
+            listCards={listCards}
+            setListCards={setListCards}
+            content={content}
             index={index}
-            key={index} />
+            key={index}
+        />
     ))
 
     return (
-        <StyledCardList>
+        <StyledList>
             <div className="list-wrapper">
                 <div className="list-content">
                     <div className="list-header">
-                        <div className="list-header-title">{list_title}</div>
+                        <div className="list-header-title">{listTitle}</div>
                     </div>
                     <div className="list-cards">
-                        <Droppable droppableId={`${list_id}`}>
+                        <Droppable droppableId={`${listId}`}>
                             {(provided) => (
                                 <div
                                     ref={provided.innerRef}
                                     {...provided.droppableProps}
                                 >
-                                    {renderCardItems}
+                                    {renderListCards}
                                     {provided.placeholder}
                                 </div>
                             )}
@@ -49,22 +52,24 @@ const CardList = (props) => {
                     </div>
                     {
                         isComposing ?
-                            <CardComposer
+                            (<CardComposer
+                                listId={listId}
                                 isComposing={isComposing}
                                 setIsComposing={setIsComposing}
-                                cardItems={cardItems}
-                                setCardItems={setCardItems} /> :
+                                listCards={listCards}
+                                setListCards={setListCards}
+                            />) :
                             (<div className="card-composer-container" onClick={openCardComposer}>
                                 <span>+ Add another card</span>
                             </div>)
                     }
                 </div>
             </div>
-        </StyledCardList>
+        </StyledList>
     )
 }
 
-const StyledCardList = styled.div`
+const StyledList = styled.div`
     .list-wrapper {
         width: 272px;
         margin: 0 4px;
@@ -130,7 +135,4 @@ const StyledCardList = styled.div`
 
 `
 
-const StyledList = styled.div`
-`
-
-export default CardList;
+export default List;

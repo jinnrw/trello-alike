@@ -37,6 +37,30 @@ app.post('/api', (req, res) => {
   res.json(Board)
 })
 
+// Add List
+app.post('/api/addList', (req, res) => {
+  let newList = req.body;
+  data.Lists.push(newList);
+  res.json(data.Lists[data.Lists.length - 1]);
+})
+
+// Edit Card
+app.post('/api/editCard', (req, res) => {
+  let listId = req.body.listId;
+  let cardId = req.body.cardId;
+  let title = req.body.title;
+  data.Lists[listId].listCards[cardId].title = title;
+  res.json(data.Lists[listId].listCards);
+})
+
+// Add Card
+app.post('/api/addCard', (req, res) => {
+  let listId = req.body.listId;
+  let card = req.body.card;
+  data.Lists[listId].listCards.push(card);
+  res.json(data.Lists[listId].listCards);
+})
+
 // 404 Page
 app.use(function (req, res, next) {
   res.status(404).send("Sorry can't find that!")

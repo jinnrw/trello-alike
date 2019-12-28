@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from "styled-components";
-import CardList from './CardList';
+import List from './List';
 import AddList from './AddList';
 import { DragDropContext } from 'react-beautiful-dnd';
 
@@ -18,10 +18,10 @@ const BoardCanvas = () => {
 
     // Render multiple lists
     let renderLists = lists.map((list, index) => (
-        <CardList
-            list_id={list.list_id}
-            list_title={list.list_title}
-            list_items={list.list_items}
+        <List
+            listId={list.listId}
+            listTitle={list.listTitle}
+            listCards={list.listCards}
             key={index} />
     ))
 

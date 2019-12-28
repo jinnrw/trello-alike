@@ -15,18 +15,33 @@ const AddList = (props) => {
             textareaRef.current.focus();
     }, [isAddingList])
 
+    // POST Method
+    function postAddList(newList) {
+        fetch('/api/addList', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newList)
+        }).then((res) => res.json())
+            .then((data) => {
+                setLists([...lists, data]);
+            })
+            .catch((err) => console.log(err))
+    }
+
     function saveAddList() {
         if (!(textareaRef.current.value === "")) {
             let newList = {
-                list_id: lists[lists.length-1].list_id + 1,
-                list_title: textareaRef.current.value,
-                list_items: []
+                listId: lists[lists.length - 1].listId + 1,
+                listTitle: textareaRef.current.value,
+                listCards: []
             };
+console.log(newList);
 
-            setLists([...lists, newList]);
+            postAddList(newList);
+            // setLists([...lists, newList]);
             setIsAddingList(false);
-            console.log(lists);
-            
         }
     }
 

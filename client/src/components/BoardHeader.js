@@ -27,7 +27,7 @@ const BoardHeaderDiv = ({ className }) => {
         }
     }, [isEditingTitle])
 
-    //  Fetch API
+    //  Fetch Method
     function postBoardTitle(newBoard) {
         fetch('/api', {
             method: 'POST',
