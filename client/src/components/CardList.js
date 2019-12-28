@@ -3,6 +3,8 @@ import styled from "styled-components";
 import CardItem from './CardItem';
 import CardComposer from './CardComposer';
 
+import { Droppable } from 'react-beautiful-dnd';
+
 const CardList = (props) => {
     let list_id = props.list_id;
     let list_title = props.list_title;
@@ -17,24 +19,34 @@ const CardList = (props) => {
         }
     }
 
+    // Render multiple cards
+    let renderCardItems = cardItems.map((item, index) => (
+        <CardItem
+            item={item}
+            index={index}
+            key={index} />
+    ))
+
     return (
-        <StyledCardLists>
+        <StyledCardList>
             <div className="list-wrapper">
                 <div className="list-content">
                     <div className="list-header">
                         <div className="list-header-title">{list_title}</div>
                     </div>
-                    {
-                        cardItems.map((item, index) => (
-                            <CardItem
-                                cardItems={cardItems}
-                                setCardItems={setCardItems}
-                                list_id={list_id}
-                                item={item}
-                                index={index}
-                                key={index} />
-                        ))
-                    }
+                    <div className="list-cards">
+                        <Droppable droppableId={`${list_id}`}>
+                            {(provided) => (
+                                <div
+                                    ref={provided.innerRef}
+                                    {...provided.droppableProps}
+                                >
+                                    {renderCardItems}
+                                    {provided.placeholder}
+                                </div>
+                            )}
+                        </Droppable>
+                    </div>
                     {
                         isComposing ?
                             <CardComposer
@@ -46,14 +58,13 @@ const CardList = (props) => {
                                 <span>+ Add another card</span>
                             </div>)
                     }
-
                 </div>
             </div>
-        </StyledCardLists>
+        </StyledCardList>
     )
 }
 
-const StyledCardLists = styled.div`
+const StyledCardList = styled.div`
     .list-wrapper {
         width: 272px;
         margin: 0 4px;
@@ -99,6 +110,10 @@ const StyledCardLists = styled.div`
         padding: 0 12px;
     }
 
+    .list-cards {
+        padding-bottom: 10px;
+    }
+
     .card-composer-container {
         color: #5e6c84;
         border-radius: 3px;
@@ -113,6 +128,9 @@ const StyledCardLists = styled.div`
         }
     }
 
+`
+
+const StyledList = styled.div`
 `
 
 export default CardList;

@@ -7,37 +7,40 @@ module.exports.Lists = [{
     list_title: "To Do",
     list_items: [
       {
-        id: 0,
+        id: 00,
         title: "do this",
         completed: false,
       },
       {
-        id: 1,
+        id: 01,
         title: "do that",
         completed: false,
       },
       {
-        id: 2,
+        id: 02,
         title: "push to github",
         completed: false,
       }
     ]
-  // }, {
-  //   list_id: 1,
-  //   list_title: "Done",
-  //   list_items: [
-  //     {
-  //       title: "buy milk",
-  //       completed: false,
-  //     },
-  //     {
-  //       title: "overcooked dinner",
-  //       completed: false,
-  //     },
-  //     {
-  //       title: "save your code",
-  //       completed: false,
-  //     }
-  //   ]
+  }, {
+    list_id: 1,
+    list_title: "Done",
+    list_items: [
+      {
+        id: 10,
+        title: "buy milk",
+        completed: false,
+      },
+      {
+        id: 11,
+        title: "overcooked dinner",
+        completed: false,
+      },
+      {
+        id: 12,
+        title: "save your code",
+        completed: false,
+      }
+    ]
   }
   ]

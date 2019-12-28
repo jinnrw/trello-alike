@@ -2,15 +2,15 @@ import React, { useRef, useState, useEffect } from 'react';
 import styled from "styled-components";
 import TextArea from "../styled-components/TextArea"
 import { Button } from "../styled-components/Buttons"
-
-import { DragDropContext } from 'react-beautiful-dnd';
-import { Droppable } from 'react-beautiful-dnd';
 import { Draggable } from 'react-beautiful-dnd';
 
 const CardItem = (props) => {
     const cardItems = props.cardItems;
     const setCardItems = props.setCardItems;
     const list_id = props.list_id;
+    const item = props.item;
+    const index = props.index;
+
     const [isEditingCard, setIsEditingCard] = useState(false);
     const [currentEditingIndex, setCurrentEditingIndex] = useState(null);
 
@@ -63,16 +63,10 @@ const CardItem = (props) => {
         setCurrentEditingIndex(null);
     }
 
-    // Drag n Draop
-    function onDragEnd() {
-        console.log('drag end');
-
-    }
-
-    const singleCardItem = (item, index) =>
-        (<Draggable draggableId={`${item.id}`} index={index}>
-            {
-                (provided) => (
+    return (
+        <StyledCardItems>
+            <Draggable draggableId={`${item.id}`} index={index}>
+                {(provided) => (
                     <StyledSingleCard
                         className="list-card"
                         {...provided.draggableProps}
@@ -88,13 +82,8 @@ const CardItem = (props) => {
                             </div>
                         </div>
                     </StyledSingleCard>
-                )
-            }
-        </Draggable>)
-
-    return (
-        <StyledCardItems>
-            {singleCardItem}
+                )}
+            </Draggable>
         </StyledCardItems>
     )
 }
@@ -102,8 +91,6 @@ const CardItem = (props) => {
 const StyledCardItems = styled.div`
     flex: 1 1 auto;
     margin-bottom: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
     padding: 0 4px;
     z-index: 1;
     min-height: 0;

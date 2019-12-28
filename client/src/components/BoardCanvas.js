@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from "styled-components";
 import CardList from './CardList';
 import AddList from './AddList';
-
+import { DragDropContext } from 'react-beautiful-dnd';
 
 const BoardCanvas = () => {
     const [lists, setLists] = useState([]);
@@ -25,29 +25,36 @@ const BoardCanvas = () => {
             key={index} />
     ))
 
+    // Drag n Draop
+    function onDragEnd() {
+        console.log('drag end');
+
+    }
     return (
         <StyledBoardCanvas id="board">
-            {renderLists}
-            {<AddList 
-                lists={lists}
-                setLists={setLists}/>}
+            <DragDropContext onDragEnd={onDragEnd}>
+                {renderLists}
+                {<AddList
+                    lists={lists}
+                    setLists={setLists} />}
+            </DragDropContext>
         </StyledBoardCanvas>
     )
 }
 
 const StyledBoardCanvas = styled.div`
-    display: flex;
-    user-select: none;
-    white-space: nowrap;
-    margin-bottom: 8px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding: 8px;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: calc(100vh - 120px);
-    width: calc(100% - 16px);
-`
+            display: flex;
+            user-select: none;
+            white-space: nowrap;
+            margin-bottom: 8px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 8px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: calc(100vh - 120px);
+            width: calc(100% - 16px);
+        `
 
 export default BoardCanvas;

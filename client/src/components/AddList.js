@@ -18,12 +18,15 @@ const AddList = (props) => {
     function saveAddList() {
         if (!(textareaRef.current.value === "")) {
             let newList = {
+                list_id: lists[lists.length-1].list_id + 1,
                 list_title: textareaRef.current.value,
                 list_items: []
             };
 
             setLists([...lists, newList]);
             setIsAddingList(false);
+            console.log(lists);
+            
         }
     }
 
