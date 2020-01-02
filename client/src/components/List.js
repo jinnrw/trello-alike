@@ -7,10 +7,15 @@ import { Droppable } from 'react-beautiful-dnd';
 
 const List = (props) => {
     const listId = props.listId;
-    const listTitle = props.listTitle;
+    const list = props.list;
+    const [cards, setCards] = useState(props.cards);
 
     const [isComposing, setIsComposing] = useState(false);
-    const [listCards, setListCards] = useState(props.listCards);
+
+    // Sync props when parent props changed
+    useEffect(()=> {
+        setCards(props.cards);
+    }, [props])
 
     function openCardComposer() {
         if (!isComposing) {
@@ -19,14 +24,14 @@ const List = (props) => {
     }
 
     // Render multiple cards
-    const renderListCards = listCards.map((content, index) => (
+    const renderListCards = cards.map((card, index) => (
         <Card
-            listId={listId}
-            listCards={listCards}
-            setListCards={setListCards}
-            content={content}
+            card={card}
+            cards={cards}
+            cardId={card.id}
+            setCards={setCards}
             index={index}
-            key={index}
+            key={card.id}
         />
     ))
 
@@ -35,10 +40,10 @@ const List = (props) => {
             <div className="list-wrapper">
                 <div className="list-content">
                     <div className="list-header">
-                        <div className="list-header-title">{listTitle}</div>
+                        <div className="list-header-title">{list.title}</div>
                     </div>
                     <div className="list-cards">
-                        <Droppable droppableId={`${listId}`}>
+                        <Droppable droppableId={list.id}>
                             {(provided) => (
                                 <div
                                     ref={provided.innerRef}
@@ -56,8 +61,8 @@ const List = (props) => {
                                 listId={listId}
                                 isComposing={isComposing}
                                 setIsComposing={setIsComposing}
-                                listCards={listCards}
-                                setListCards={setListCards}
+                                cards={cards}
+                                setCards={setCards}
                             />) :
                             (<div className="card-composer-container" onClick={openCardComposer}>
                                 <span>+ Add another card</span>

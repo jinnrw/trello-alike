@@ -4,7 +4,7 @@ import { Button, ButtonClose } from "../styled-components/Buttons"
 
 const CardComposer = (props) => {
     const listId = props.listId;
-    const listCards = props.listCards;
+    const cards = props.cards;
     const setListCards = props.setListCards;
     const isComposing = props.isComposing;
     
@@ -38,10 +38,11 @@ const CardComposer = (props) => {
         props.setIsComposing(false);
     }
 
+    // To do: Rewrite addNewCard()
     function addNewCard() {
         if (!(textareaRef.current.value === "")) {
             let newCard = {
-                id: listCards[listCards.length - 1].id + 1,
+                // id: listCards[listCards.length - 1].id + 1,
                 title: textareaRef.current.value,
                 completed: false
             };

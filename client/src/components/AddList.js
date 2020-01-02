@@ -4,8 +4,8 @@ import { Button, ButtonClose } from "../styled-components/Buttons"
 import TextArea from "../styled-components/TextArea"
 
 const AddList = (props) => {
-    const lists = props.lists;
-    const setLists = props.setLists;
+    const board = props.board;
+    const setBoard = props.setBoard;
 
     const [isAddingList, setIsAddingList] = useState(false);
     const textareaRef = useRef();
@@ -22,10 +22,19 @@ const AddList = (props) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(newList)
+            body: JSON.stringify({ newList })
         }).then((res) => res.json())
             .then((data) => {
-                setLists([...lists, data]);
+                let newLists = data.lists;
+                let newListOrder = data.listOrder;
+
+                setBoard({
+                    ...board,
+                    lists: newLists,
+                    listOrder: newListOrder
+                });
+                console.log(data);
+
             })
             .catch((err) => console.log(err))
     }
@@ -33,14 +42,13 @@ const AddList = (props) => {
     function saveAddList() {
         if (!(textareaRef.current.value === "")) {
             let newList = {
-                listId: lists[lists.length - 1].listId + 1,
-                listTitle: textareaRef.current.value,
-                listCards: []
+                id: `list-${Object.keys(board.lists).length + 1}`,
+                title: textareaRef.current.value,
+                cardIds: []
             };
-console.log(newList);
 
+            console.log(newList);
             postAddList(newList);
-            // setLists([...lists, newList]);
             setIsAddingList(false);
         }
     }

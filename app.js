@@ -4,7 +4,7 @@ const path = require('path');
 // Load data
 const data = require('./Data.js');
 
-let Board = {
+let BoardTitle = {
   boardTitle: "My Trello App"
 };
 
@@ -22,44 +22,62 @@ app.get('/', (req, res) => {
 
 // GET method route
 app.get('/api', (req, res) => {
-  res.json(Board);
+  res.json(BoardTitle);
 })
 
 app.get('/api/lists', (req, res) => {
-  res.json(data.Lists);
+  res.json(data.Board);
 })
 
 // POST method
 // Change app title
 app.post('/api', (req, res) => {
   console.log(req.body);
-  Board.boardTitle = req.body.boardTitle;
-  res.json(Board)
+  BoardTitle.boardTitle = req.body.boardTitle;
+  res.json(BoardTitle)
 })
 
 // Add List
 app.post('/api/addList', (req, res) => {
-  let newList = req.body;
-  data.Lists.push(newList);
-  res.json(data.Lists[data.Lists.length - 1]);
+  let newList = req.body.newList;
+  // let newLists = { ...data.Board.lists };
+  // let newListOrder = [...data.Board.listOrder];
+  data.Board.lists[newList.id] = newList;
+  data.Board.listOrder.push(newList.id)
+  
+  console.log(newList);
+
+  res.json({
+    lists: data.Board.lists,
+    listOrder: data.Board.listOrder
+  });
+})
+
+// Update Board
+app.post('/api/updateLists', (req, res) => {
+  let newLists = req.body;
+  console.log(newLists);
+  data.Board = newLists;
+  res.json(data.Board);
 })
 
 // Edit Card
 app.post('/api/editCard', (req, res) => {
-  let listId = req.body.listId;
-  let cardId = req.body.cardId;
-  let title = req.body.title;
-  data.Lists[listId].listCards[cardId].title = title;
-  res.json(data.Lists[listId].listCards);
+  let cardId = req.body.id;
+  let content = req.body.content;
+  data.Board.cards[cardId].content = content;
+  res.json(data.Board.cards[cardId]);
 })
 
 // Add Card
 app.post('/api/addCard', (req, res) => {
   let listId = req.body.listId;
   let card = req.body.card;
-  data.Lists[listId].listCards.push(card);
-  res.json(data.Lists[listId].listCards);
+  data.Board[listId].listCards.push(card);
+  res.json(data.Board[listId].listCards);
 })
+
+
 
 // 404 Page
 app.use(function (req, res, next) {

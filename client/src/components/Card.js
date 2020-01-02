@@ -5,39 +5,64 @@ import { Button } from "../styled-components/Buttons"
 import { Draggable } from 'react-beautiful-dnd';
 
 const Card = (props) => {
-    const listId = props.listId;
-    const listCards = props.listCards;
-    const setListCards = props.setListCards;
-    const content = props.content;
-    const index = props.index;
+    const cardId = props.cardId;
+    const cards = props.cards;
+    const setCards = props.setCards;
+    const [card, setCard] = useState(props.card);
+    const [index, setIndex] = useState(props.index);
 
     const [isEditingCard, setIsEditingCard] = useState(false);
     const [currentEditingIndex, setCurrentEditingIndex] = useState(null);
 
+    const [isPropsChanged, setIsPropsChanged] = useState(false);
+
     let textareaRef = useRef();
+
+    // useEffect(() => {
+    //     // setIsPropsChanged(true);
+    //     // if (content.title !== props.content.title) {
+    //         // setContent(props.content);
+    //         console.log('content: '+content.title);
+    //         console.log(props.content.title);
+    //         setLisCards(props.cards);
+    //     // }
+    //     // setIndex(props.index);
+    // }, [props.cards])
+
+    // useEffect(() => {
+    //     if (isPropsChanged) {
+    //         // do something
+    //         setIsPropsChanged(false);
+    //     }
+    // }, [isPropsChanged])
 
     useEffect(() => {
         if (isEditingCard && !(currentEditingIndex === null)) {
             textareaRef.current.focus();
-            textareaRef.current.value = listCards[currentEditingIndex].title;
+            textareaRef.current.value = cards[currentEditingIndex].content;
         }
     }, [currentEditingIndex])
 
     // POST Method
-    function postCardTitle(listId, cardId, title) {
+    function postCardTitle(content) {
         fetch('/api/editcard', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                listId: listId,
-                cardId: cardId,
-                title: title
+                id: cardId,
+                content: content
             })
         }).then((res) => res.json())
             .then((data) => {
-                setListCards(data);
+                let newCards = [...cards];
+                for (let i = 0; i < newCards.length; i++) {
+                    if (newCards[i].id === data.id) {
+                        newCards[i].content = data.content;
+                    }
+                }
+                setCards(newCards);
             })
             .catch((err) => console.log(err))
     }
@@ -64,17 +89,13 @@ const Card = (props) => {
     }
 
     function saveEditor() {
-        postCardTitle(
-            listId,
-            currentEditingIndex,
-            textareaRef.current.value
-        );
+        postCardTitle(textareaRef.current.value);
         reset();
     }
 
     function cancelEditor() {
         // return previous state
-        setListCards(prev => prev);
+        setCards(prev => prev);
         reset();
     }
 
@@ -102,8 +123,70 @@ const Card = (props) => {
             {isEditingCard ?
                 (quickEditor(index))
                 :
-                (<Draggable draggableId={`${listId}-${content.id}`} index={index}>
-                    {(provided) => (
+                // (<Draggable
+                //     draggableId={content.id}
+                //     index={index}
+                // >
+                //     {(provided, snapshot) => (
+                //         <div
+                //             className="list-card"
+                //             {...provided.draggableProps}
+                //             {...provided.dragHandleProps}
+                //             ref={provided.innerRef}
+                //         >
+                //             <div className="list-card-detail">
+                //                 <div>{content.title}</div>
+                //                 <div>{content.id}</div>
+                //                 <div className="edit-card"
+                //                     onClick={() => {
+                //                         editCardTitle(index);
+                //                     }}>
+                //                 </div>
+                //             </div>
+                //         </div>
+                //     )}
+                // </Draggable>)
+                // (isPropsChanged ?
+                //     (<div className="list-card">
+                //         <div className="list-card-detail">
+                //             <div>{content.title}</div>
+                //             <div>{content.id}</div>
+                //             <div className="edit-card"
+                //                 onClick={() => {
+                //                     editCardTitle(index);
+                //                 }}>
+                //             </div>
+                //         </div>
+                //     </div>)
+                //     :
+                //     (<Draggable
+                //         draggableId={content.id}
+                //         index={index}
+                //     >
+                //         {(provided, snapshot) => (
+                //             <div
+                //                 className="list-card"
+                //                 {...provided.draggableProps}
+                //                 {...provided.dragHandleProps}
+                //                 ref={provided.innerRef}
+                //             >
+                //                 <div className="list-card-detail">
+                //                     <div>{content.title}</div>
+                //                     <div>{content.id}</div>
+                //                     <div className="edit-card"
+                //                         onClick={() => {
+                //                             editCardTitle(index);
+                //                         }}>
+                //                     </div>
+                //                 </div>
+                //             </div>
+                //         )}
+                //     </Draggable>)
+                // )
+                (<Draggable
+                    draggableId={card.id}
+                    index={index}>
+                    {(provided, snapshot) => (
                         <div
                             className="list-card"
                             {...provided.draggableProps}
@@ -111,7 +194,8 @@ const Card = (props) => {
                             ref={provided.innerRef}
                         >
                             <div className="list-card-detail">
-                                <div>{content.title}</div>
+                                <div>{card.content}</div>
+                                <div>{card.id}</div>
                                 <div className="edit-card"
                                     onClick={() => {
                                         editCardTitle(index);
