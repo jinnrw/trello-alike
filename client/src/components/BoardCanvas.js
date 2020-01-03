@@ -17,23 +17,29 @@ const BoardCanvas = () => {
             .then(res => res.json())
             .then(data => {
                 setBoard(data);
-                console.log(data);
+                // console.log(data);
             })
     }, [])
 
+    useEffect(()=> {
+        console.log('board is updating');
+        
+    },[board])
+
     // POST Method
-    function postLists(newLists) {
+    function postLists(listId, cardIds) {
         fetch('/api/updateLists', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(newLists)
+            body: JSON.stringify({
+                listId: listId,
+                cardIds: cardIds
+            })
         }).then((res) => res.json())
             .then((data) => {
-                setBoard(data);
-                console.log("set lists");
-
+                console.log("lists updated in db");
             })
             .catch((err) => console.log(err))
     }
@@ -43,20 +49,22 @@ const BoardCanvas = () => {
         const list = board.lists[listId];
         const cards = list.cardIds.map(cardId => board.cards[cardId]);
 
-        console.log("cards");
-        console.log(cards);
+        // console.log(listId + ": cards ");
+        // console.log(cards);
         
         return (<List
             key={list.id}
             listId={listId}
             list={list}
             cards={cards}
+            board={board}
+            setBoard={setBoard}
         />)
     })
 
     const onDragEnd = result => {
         const { destination, source, draggableId } = result;
-        console.log(result);
+        // console.log(result);
 
         // dropped outside the list
         if (!destination) {
@@ -70,23 +78,21 @@ const BoardCanvas = () => {
         }
 
         // Reorder within the same list
-        // if (source.droppableId === destination.droppableId) {
-        //     const list = lists[source.droppableId];
-        //     const newListCards = Array.from(list.listCards);
-        //     const [removedCard] = newListCards.splice(source.index, 1);
-        //     newListCards.splice(destination.index, 0, removedCard);
+        if (source.droppableId === destination.droppableId) {
+            const listId = source.droppableId;
+            const cardIds = board.lists[listId].cardIds;
+            const newCardIds = [...cardIds];
+            const [removedCard] = newCardIds.splice(source.index, 1);
+            newCardIds.splice(destination.index, 0, removedCard);
 
-        //     console.log(newListCards);
+            postLists(listId, newCardIds);
+            
+            let newBoard = {...board};
+            newBoard.lists[listId].cardIds = newCardIds;
+            setBoard(newBoard);
+            console.log("DRAG END");
+        }
 
-        //     const newList = { ...list, listCards: newListCards };
-        //     const newLists = [...lists];
-        //     newLists[source.droppableId] = newList;
-
-        //     console.log(newLists);
-
-        //     postLists(newLists);
-        //     // setBoard(newLists);
-        // }
         // Reorder within the same list
         // if (sourceId === destinationId) {
         //     const newCards = Array.from(state[sourceId].cards);
@@ -110,15 +116,12 @@ const BoardCanvas = () => {
     }
 
     const onDragStart = result => {
-        console.log(result);
-
     }
 
     return (
         <StyledBoardCanvas id="board">
             <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
                 {renderBoard}
-                {/* {renderListCards} */}
                 {<AddList
                     board={board}
                     setBoard={setBoard} />}

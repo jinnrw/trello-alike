@@ -6,6 +6,8 @@ import CardComposer from './CardComposer';
 import { Droppable } from 'react-beautiful-dnd';
 
 const List = (props) => {
+    const board = props.board;
+    const setBoard = props.setBoard;
     const listId = props.listId;
     const list = props.list;
     const [cards, setCards] = useState(props.cards);
@@ -15,7 +17,12 @@ const List = (props) => {
     // Sync props when parent props changed
     useEffect(()=> {
         setCards(props.cards);
-    }, [props])
+    }, [props.cards])
+
+    // useEffect(()=> {
+    //     console.log('CARD is updating');
+    // }, [cards])
+
 
     function openCardComposer() {
         if (!isComposing) {
@@ -24,16 +31,19 @@ const List = (props) => {
     }
 
     // Render multiple cards
-    const renderListCards = cards.map((card, index) => (
-        <Card
+    const renderListCards = props.cards.map((card, index) => {
+        // console.log("CARDS: " + index);
+        // console.log(card);
+        
+        return (<Card
             card={card}
             cards={cards}
             cardId={card.id}
             setCards={setCards}
             index={index}
             key={card.id}
-        />
-    ))
+        />)
+    })
 
     return (
         <StyledList>
@@ -61,8 +71,8 @@ const List = (props) => {
                                 listId={listId}
                                 isComposing={isComposing}
                                 setIsComposing={setIsComposing}
-                                cards={cards}
-                                setCards={setCards}
+                                board={board}
+                                setBoard={setBoard}
                             />) :
                             (<div className="card-composer-container" onClick={openCardComposer}>
                                 <span>+ Add another card</span>

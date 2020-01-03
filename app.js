@@ -44,7 +44,7 @@ app.post('/api/addList', (req, res) => {
   // let newListOrder = [...data.Board.listOrder];
   data.Board.lists[newList.id] = newList;
   data.Board.listOrder.push(newList.id)
-  
+
   console.log(newList);
 
   res.json({
@@ -53,12 +53,12 @@ app.post('/api/addList', (req, res) => {
   });
 })
 
-// Update Board
+// Update Lists after reordering
 app.post('/api/updateLists', (req, res) => {
-  let newLists = req.body;
-  console.log(newLists);
-  data.Board = newLists;
-  res.json(data.Board);
+  let listId = req.body.listId;
+  let cardIds = req.body.cardIds;
+  data.Board.lists[listId].cardIds = cardIds;
+  res.json(data.Board.lists[listId].cardIds);
 })
 
 // Edit Card
@@ -71,13 +71,24 @@ app.post('/api/editCard', (req, res) => {
 
 // Add Card
 app.post('/api/addCard', (req, res) => {
+  let cards = data.Board.cards;
+  let cardsLength = Object.keys(cards).length;
   let listId = req.body.listId;
-  let card = req.body.card;
-  data.Board[listId].listCards.push(card);
-  res.json(data.Board[listId].listCards);
+  let content = req.body.content;
+  let cardId = "card-" + `${cardsLength+1}`;
+  let newCard = {
+      id: cardId, 
+      content: content
+  }
+
+  data.Board.cards[cardId] = newCard;
+  data.Board.lists[listId].cardIds.push(cardId); 
+  
+  res.json({
+    cards: data.Board.cards,
+    cardIds: data.Board.lists[listId].cardIds
+  });
 })
-
-
 
 // 404 Page
 app.use(function (req, res, next) {

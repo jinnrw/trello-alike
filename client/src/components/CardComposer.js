@@ -3,11 +3,11 @@ import styled from "styled-components";
 import { Button, ButtonClose } from "../styled-components/Buttons"
 
 const CardComposer = (props) => {
+    const board = props.board;
+    const setBoard = props.setBoard;
     const listId = props.listId;
-    const cards = props.cards;
-    const setListCards = props.setListCards;
     const isComposing = props.isComposing;
-    
+
     let textareaRef = useRef();
 
     useEffect(() => {
@@ -17,7 +17,7 @@ const CardComposer = (props) => {
     }, [isComposing])
 
     // POST Method
-    function postAddCard(listId, card) {
+    function postAddCard(listId, content) {
         fetch('/api/addCard', {
             method: 'POST',
             headers: {
@@ -25,11 +25,22 @@ const CardComposer = (props) => {
             },
             body: JSON.stringify({
                 listId: listId,
-                card: card
+                content: content
             })
         }).then((res) => res.json())
             .then((data) => {
-                setListCards(data);
+                let newBoard = {
+                    ...board,
+                    cards: data.cards,
+                    lists: {
+                        ...board.lists,
+                        [listId]: {
+                            ...board.lists[listId],
+                            cardIds: data.cardIds
+                        }
+                    }
+                };
+                setBoard(newBoard);
             })
             .catch((err) => console.log(err))
     }
@@ -38,15 +49,10 @@ const CardComposer = (props) => {
         props.setIsComposing(false);
     }
 
-    // To do: Rewrite addNewCard()
     function addNewCard() {
         if (!(textareaRef.current.value === "")) {
-            let newCard = {
-                // id: listCards[listCards.length - 1].id + 1,
-                title: textareaRef.current.value,
-                completed: false
-            };
-            postAddCard(listId, newCard);
+            let content = textareaRef.current.value;
+            postAddCard(listId, content);
             closeComposer();
         }
     }

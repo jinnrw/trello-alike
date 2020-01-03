@@ -14,9 +14,12 @@ const Card = (props) => {
     const [isEditingCard, setIsEditingCard] = useState(false);
     const [currentEditingIndex, setCurrentEditingIndex] = useState(null);
 
-    const [isPropsChanged, setIsPropsChanged] = useState(false);
-
     let textareaRef = useRef();
+
+    // Sync props when parent props changed
+    useEffect(() => {
+        setIndex(props.index);
+    }, [props.index])
 
     // useEffect(() => {
     //     // setIsPropsChanged(true);
@@ -28,13 +31,6 @@ const Card = (props) => {
     //     // }
     //     // setIndex(props.index);
     // }, [props.cards])
-
-    // useEffect(() => {
-    //     if (isPropsChanged) {
-    //         // do something
-    //         setIsPropsChanged(false);
-    //     }
-    // }, [isPropsChanged])
 
     useEffect(() => {
         if (isEditingCard && !(currentEditingIndex === null)) {
@@ -123,66 +119,6 @@ const Card = (props) => {
             {isEditingCard ?
                 (quickEditor(index))
                 :
-                // (<Draggable
-                //     draggableId={content.id}
-                //     index={index}
-                // >
-                //     {(provided, snapshot) => (
-                //         <div
-                //             className="list-card"
-                //             {...provided.draggableProps}
-                //             {...provided.dragHandleProps}
-                //             ref={provided.innerRef}
-                //         >
-                //             <div className="list-card-detail">
-                //                 <div>{content.title}</div>
-                //                 <div>{content.id}</div>
-                //                 <div className="edit-card"
-                //                     onClick={() => {
-                //                         editCardTitle(index);
-                //                     }}>
-                //                 </div>
-                //             </div>
-                //         </div>
-                //     )}
-                // </Draggable>)
-                // (isPropsChanged ?
-                //     (<div className="list-card">
-                //         <div className="list-card-detail">
-                //             <div>{content.title}</div>
-                //             <div>{content.id}</div>
-                //             <div className="edit-card"
-                //                 onClick={() => {
-                //                     editCardTitle(index);
-                //                 }}>
-                //             </div>
-                //         </div>
-                //     </div>)
-                //     :
-                //     (<Draggable
-                //         draggableId={content.id}
-                //         index={index}
-                //     >
-                //         {(provided, snapshot) => (
-                //             <div
-                //                 className="list-card"
-                //                 {...provided.draggableProps}
-                //                 {...provided.dragHandleProps}
-                //                 ref={provided.innerRef}
-                //             >
-                //                 <div className="list-card-detail">
-                //                     <div>{content.title}</div>
-                //                     <div>{content.id}</div>
-                //                     <div className="edit-card"
-                //                         onClick={() => {
-                //                             editCardTitle(index);
-                //                         }}>
-                //                     </div>
-                //                 </div>
-                //             </div>
-                //         )}
-                //     </Draggable>)
-                // )
                 (<Draggable
                     draggableId={card.id}
                     index={index}>
@@ -195,7 +131,7 @@ const Card = (props) => {
                         >
                             <div className="list-card-detail">
                                 <div>{card.content}</div>
-                                <div>{card.id}</div>
+                                {/* <div>{card.id}</div> */}
                                 <div className="edit-card"
                                     onClick={() => {
                                         editCardTitle(index);

@@ -4,6 +4,7 @@ module.exports.Board = {
     'card-2': { id: 'card-2', content: 'to do 2' },
     'card-3': { id: 'card-3', content: 'to do 3' },
     'card-4': { id: 'card-4', content: 'to do 4' },
+    'card-5': { id: 'card-5', content: 'to do 5' },
   },
   lists: {
     'list-1': {
@@ -14,7 +15,7 @@ module.exports.Board = {
     'list-2': {
       id: 'list-2',
       title: 'Done',
-      cardIds: ['card-4']
+      cardIds: ['card-4','card-5']
     },
   },
   listOrder: ['list-1', 'list-2'],
