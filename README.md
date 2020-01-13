@@ -3,10 +3,10 @@ This project is a [Trello ](https://trello.com/) inspired list-making app and is
 ## Feature
 - React Hooks
 - Styled-component
-- A backend server (future features, potentially node)
-- Database (future features)
+- A backend server, Node.js
+- Database, Redis
+- Drag and drop support, [react-beautiful-dnd](https://github.com/atlassian/react-beautiful-dnd)
 - Redux (TBD)
-- Drag and drop support (future features)
 - Websocket communication (TBD)
 - Unit test Jest (TBD)
 
