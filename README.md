@@ -12,7 +12,7 @@ The idea is to create a public board and collaborate with your team, with a give
 
 ## How to run locally
 #### Server  
-Intall Redis and start the redis server.
+Install Redis and start the redis server.
 ```bash
 brew install redis
 brew services start redis
