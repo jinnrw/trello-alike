@@ -19,6 +19,6 @@
   "homepage": "https://github.com/jinnrw/trello-alike#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "redis": "^2.8.0"
+    "redis": "^3.1.1"
   }
 }
